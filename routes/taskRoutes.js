@@ -1,0 +1,25 @@
+const express = require('express')
+const router = express.Router();
+const { getTasks, getTaskById, createTask, deleteTask, updateTask } = require("../controllers/taskController");
+const verifyToken = require('../middleware/verifyToken');
+const allowedTo = require('../middleware/allowedTo');
+const userRoles = require('../utils/userRoles');
+
+router.route("/")
+                .get( getTasks)
+                .post(verifyToken,allowedTo(userRoles.MANAGER),createTask)
+router.route("/:id")
+                .get(getTaskById)
+                .patch (updateTask)
+                .delete (verifyToken,allowedTo(userRoles.ADMIN,userRoles.MANAGER),deleteTask)
+
+module.exports = router;
+
+
+
+
+
+
+
+
+
