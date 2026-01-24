@@ -39,9 +39,6 @@ const register = asyncWrapper(async (req, res, next) => {
 
 const login = asyncWrapper(async (req, res, next) => {
     const { email, password ,role} = req.body;
-    if (!email || !password) {
-        return next(new AppError("email and password are required", 400));
-    }
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
         return next(new AppError("Wrong email or password", 400));
