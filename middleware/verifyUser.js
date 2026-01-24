@@ -12,6 +12,12 @@ const registerSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(5).max(20).required()
 });
+const updateSchema = Joi.object({
+    firstName: Joi.string().min(3).max(30),
+    lastName: Joi.string().min(3).max(30),
+    email: Joi.string().email(),
+    password: Joi.string().min(5).max(20)
+}).min(1);
 
 const registerVerify = (req, res, next) => {
     const { error } = registerSchema.validate(req.body, { abortEarly: false });
@@ -44,4 +50,17 @@ const loginVerify = (req, res, next) => {
     }
     next();
 }
-module.exports = { registerVerify, loginVerify };
+const updateVerify = (req, res, next) => {
+    const { error } = updateSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+        const errors = Object.fromEntries(
+            error.details.map(e => [
+                e.path[0],
+                e.message.replace(/"/g, "")
+            ])
+        );
+        return next(new AppError("Validation error", 400, errors));
+    }
+    next();
+}
+module.exports = { registerVerify, loginVerify, updateVerify };
