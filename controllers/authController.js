@@ -2,9 +2,9 @@ const User = require("../models/user");
 const AppError = require('../utils/AppError');
 const bcrypt = require("bcrypt");
 const asyncWrapper = require('../middleware/asyncWrapper');
-const jwt = require('jsonwebtoken');
 const generateJWT = require('../utils/generateJWT');
-const mongoose = require('mongoose');
+
+
 const register = asyncWrapper(async (req, res, next) => {
     const { firstName, lastName, email, password, role, birthDate, gender } = req.body;
     // Check if user already exists
