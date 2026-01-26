@@ -10,13 +10,17 @@ const registerSchema = Joi.object({
     firstName: Joi.string().min(3).max(30).required(),
     lastName: Joi.string().min(3).max(30).required(),
     email: Joi.string().email().required(),
-    password: Joi.string().min(5).max(20).required()
+    password: Joi.string().min(5).max(20).required(),
+    birthDate: Joi.date().required(),
+    gender: Joi.string().valid('male', 'female').required(),
 });
 const updateSchema = Joi.object({
     firstName: Joi.string().min(3).max(30),
     lastName: Joi.string().min(3).max(30),
     email: Joi.string().email(),
-    password: Joi.string().min(5).max(20)
+    password: Joi.string().min(5).max(20),
+    birthDate: Joi.date(),
+    gender: Joi.string().valid('male', 'female')
 }).min(1);
 
 const registerVerify = (req, res, next) => {
@@ -35,7 +39,6 @@ const registerVerify = (req, res, next) => {
 
     next();
 };
-
 
 const loginVerify = (req, res, next) => {
     const { error } = loginSchema.validate(req.body, { abortEarly: false });
