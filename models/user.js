@@ -6,23 +6,26 @@ const userRoles = require("../utils/userRoles");
 const userSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    token: {
-        type: String
-    },
+    token: { type: String },
     email: {
         type: String,
         required: true,
         unique: true,
         validate: [validator.isEmail, 'filed must be a valid email address']
     },
-    password: { type: String, required: true ,select:false},
+    password: { type: String, required: true, select: false },
     role: {
         type: String, // ["USER", "ADMIN", "MANAGER"]
         enum: [userRoles.USER, userRoles.ADMIN, userRoles.MANAGER],
         default: userRoles.USER
-    }
-
-}, {
+    },
+    birthDate: { type: Date, required: true },
+    gender: { type: String, enum: ['male', 'female'], required: true },
+    isActive: { type: Boolean, default: true }
+},
+    {
+        timestamps: true // createdAt & updatedAt 
+    }, {
     toJSON: {
         transform(doc, ret) {
             delete ret.__v;
@@ -32,3 +35,9 @@ const userSchema = new mongoose.Schema({
 })
 
 module.exports = mongoose.model('User', userSchema)
+
+
+
+
+
+
