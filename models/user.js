@@ -4,13 +4,15 @@ const userRoles = require("../utils/userRoles");
 
 
 const userSchema = new mongoose.Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
     token: { type: String },
     email: {
         type: String,
         required: true,
         unique: true,
+        trim: true,
+        lowercase: true,
         validate: [validator.isEmail, 'filed must be a valid email address']
     },
     password: { type: String, required: true, select: false },

@@ -11,7 +11,7 @@ const registerSchema = Joi.object({
     lastName: Joi.string().min(3).max(30).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(5).max(20).required(),
-    birthDate: Joi.date().required(),
+    birthDate: Joi.date().less('now').greater('1900-01-01').required(),
     gender: Joi.string().valid('male', 'female').required(),
 });
 const updateSchema = Joi.object({
@@ -19,7 +19,7 @@ const updateSchema = Joi.object({
     lastName: Joi.string().min(3).max(30),
     email: Joi.string().email(),
     password: Joi.string().min(5).max(20),
-    birthDate: Joi.date(),
+    birthDate: Joi.date().less('now').greater('1900-01-01'),
     gender: Joi.string().valid('male', 'female')
 }).min(1);
 
