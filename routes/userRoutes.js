@@ -1,19 +1,24 @@
 const express = require('express')
 const router = express.Router();
-const { login, register, getAllUsers, deleteUser, updateUser } = require("../controllers/userController");
+const {  getAllUsers, deleteUser, updateUser, getSingleUser } = require("../controllers/userController");
 const verifyToken = require('../middleware/verifyToken');
 const allowedTo = require('../middleware/allowedTo');
 const userRoles = require('../utils/userRoles');
 const { registerVerify, loginVerify, updateVerify } = require('../middleware/verifyUser');
+const { register, login } = require('../controllers/authController');
+
+
+router.route("/register")
+.post(registerVerify, register)  
+router.route("/login")
+.post(loginVerify, login)
 
 
 router.route("/")
     .get(verifyToken, getAllUsers)
-router.route("/register")
-    .post(registerVerify, register)
-router.route("/login")
     .post(loginVerify, login)
 router.delete("/:id", verifyToken, allowedTo(userRoles.ADMIN), deleteUser)
 router.patch("/:id", updateVerify, updateUser)
+router.get("/:id", verifyToken, getSingleUser)
 
 module.exports = router;
