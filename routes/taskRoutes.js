@@ -6,11 +6,11 @@ const allowedTo = require('../middleware/allowedTo');
 const userRoles = require('../utils/userRoles');
 
 router.route("/")
-                .get( getTasks)
-                .post(verifyToken,allowedTo(userRoles.MANAGER),createTask)
+                .get( verifyToken,getTasks)
+                .post(verifyToken,createTask)
 router.route("/:id")
                 .get(getTaskById)
-                .patch (updateTask)
+                .patch (verifyToken,allowedTo(userRoles.MANAGER),updateTask)
                 .delete (verifyToken,allowedTo(userRoles.ADMIN,userRoles.MANAGER),deleteTask)
 
 module.exports = router;

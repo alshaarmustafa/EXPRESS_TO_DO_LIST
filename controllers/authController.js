@@ -15,7 +15,7 @@ const register = asyncWrapper(async (req, res, next) => {
     // password hashing
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = new User({ firstName, lastName, email, password: hashedPassword, role, birthDate, gender });
-    const token = await generateJWT({ email: user.email, id: user._id, role: user.role });
+    const token = await generateJWT({ email: user.email, _id: user._id, role: user.role });
     user.token = token;
     console.log(token);
     await user.save();
@@ -34,7 +34,7 @@ const login = asyncWrapper(async (req, res, next) => {
     if (!isPasswordValid) {
         return next(new AppError("Wrong email or password", 400));
     }
-    const token = await generateJWT({ email: user.email, id: user._id, role: user.role })
+    const token = await generateJWT({ email: user.email, _id: user._id, role: user.role })
     res.status(200).json({ status: "success", message: "login successfully", data: { token, role: user.role } })
 })
 

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const asyncWrapper = require('../middleware/asyncWrapper');
 //retrive tasks from DB
 const getTasks = asyncWrapper(async (req, res, next) => {
-    const tasks = await Task.find();
+    const tasks = await Task.find({ user: req.user._id }).populate('user', 'firstName lastName email');
     if (tasks.length === 0) return next(new AppError("No tasks found", 404));
     res.status(200).json({ status: "success", message: "Retrieved tasks successfully!", data: tasks })
 })
@@ -19,7 +19,9 @@ const getTaskById = asyncWrapper(async (req, res, next) => {
 
 //Create New Task And Save it In DB
 const createTask = asyncWrapper(async (req, res, next) => {
-    const task = new Task(req.body)
+    console.log("USER:", req.user);
+    const { title, description, status, user } = req.body;
+    const task = new Task({ title, description, status, user:req.user._id });
     await task.save();
     res.status(201).json({ status: "success", message: "Added successfuly!", data: task })
 })
