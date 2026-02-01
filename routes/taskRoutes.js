@@ -4,14 +4,16 @@ const { getTasks, getTaskById, createTask, deleteTask, updateTask } = require(".
 const verifyToken = require('../middleware/verifyToken');
 const allowedTo = require('../middleware/allowedTo');
 const userRoles = require('../utils/userRoles');
+const { createTaskVerify, updateTaskVerify } = require('../validations/verifyTask');
 
+router.use(verifyToken);
 router.route("/")
-                .get( verifyToken,getTasks)
-                .post(verifyToken,createTask)
+                .get( getTasks)
+                .post(createTaskVerify,createTask)
 router.route("/:id")
                 .get(getTaskById)
-                .patch (verifyToken,allowedTo(userRoles.MANAGER),updateTask)
-                .delete (verifyToken,allowedTo(userRoles.ADMIN,userRoles.MANAGER),deleteTask)
+                .patch (allowedTo(userRoles.MANAGER),updateTaskVerify,updateTask)
+                .delete (allowedTo(userRoles.ADMIN,userRoles.MANAGER),deleteTask)
 
 module.exports = router;
 

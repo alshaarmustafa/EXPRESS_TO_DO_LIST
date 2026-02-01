@@ -4,7 +4,7 @@ const {  getAllUsers, deleteUser, updateUser, getSingleUser } = require("../cont
 const verifyToken = require('../middleware/verifyToken');
 const allowedTo = require('../middleware/allowedTo');
 const userRoles = require('../utils/userRoles');
-const { registerVerify, loginVerify, updateVerify } = require('../middleware/verifyUser');
+const { registerVerify, loginVerify, updateVerify } = require('../validations/verifyUser');
 const { register, login } = require('../controllers/authController');
 
 
