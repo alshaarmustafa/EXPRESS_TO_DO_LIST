@@ -1,12 +1,11 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const tasksRoutes = require("./routes/taskRoutes");
 const usersRoutes = require("./routes/userRoutes");
 const morgan = require("morgan");
 require('dotenv').config()
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000 ;
 
 // Middleware
 app.use(express.json());
