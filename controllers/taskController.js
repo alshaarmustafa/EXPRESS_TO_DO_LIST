@@ -4,7 +4,11 @@ const mongoose = require('mongoose');
 const asyncWrapper = require('../middleware/asyncWrapper');
 //retrive tasks from DB
 const getTasks = asyncWrapper(async (req, res, next) => {
-    const tasks = await Task.find({ user: req.user._id }).populate('user', 'firstName lastName email');
+     const query = req.query;
+     const limit = query.limit || 10;
+     const page = query.page || 1;
+     const skip = (page - 1) * limit;
+    const tasks = await Task.find({ user: req.user._id }).populate('user', 'firstName lastName email').limit(limit).skip(skip);
     if (tasks.length === 0) return next(new AppError("No tasks found", 404));
     res.status(200).json({ status: "success", message: "Retrieved tasks successfully!", data: tasks })
 })

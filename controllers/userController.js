@@ -2,20 +2,18 @@ const User = require("../models/user");
 const AppError = require('../utils/AppError');
 const bcrypt = require("bcrypt");
 const asyncWrapper = require('../middleware/asyncWrapper');
-const jwt = require('jsonwebtoken');
-const generateJWT = require('../utils/generateJWT');
 const mongoose = require('mongoose');
 
 const getAllUsers = asyncWrapper(async (req, res, next) => {
-    // const query = req.query;
-    // const limit = query.limit || 10;
-    // const page = query.page || 1;
-    // const skip = (page - 1) * limit;
+     const query = req.query;
+     const limit = query.limit || 10;
+     const page = query.page || 1;
+     const skip = (page - 1) * limit;
     const users = await User.find({}, { "__v": false, 'password': false, "token": false })
-    // .limit(limit).skip(skip);
+     .limit(limit).skip(skip);
 
     res.json({ status: "success", message: "Retrieved users successfully!", data: users });
-    //
+    
 })
 
 const deleteUser = asyncWrapper(async (req, res, next) => {
