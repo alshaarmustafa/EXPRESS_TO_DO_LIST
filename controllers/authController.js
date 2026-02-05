@@ -14,12 +14,21 @@ const register = asyncWrapper(async (req, res, next) => {
     }
     // password hashing
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = new User({ firstName, lastName, email, password: hashedPassword, role, birthDate, gender });
+    const user = new User({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        role,
+        birthDate,
+        gender,
+        avatar: req.file.filename
+    });
     const token = await generateJWT({ email: user.email, _id: user._id, role: user.role });
     user.token = token;
     console.log(token);
     await user.save();
-    res.status(201).json({ status: "success", message: "user registered successfully!", token })
+    res.status(201).json({ status: "success", message: "user registered successfully!", data: { token, avatar: user.avatar } })
 
 })
 

@@ -2,8 +2,9 @@ const express = require("express");
 const tasksRoutes = require("./routes/taskRoutes");
 const usersRoutes = require("./routes/userRoutes");
 const morgan = require("morgan");
+const path = require("path");
 require('dotenv').config()
-
+const cors =require('cors')
 const app = express();
 const port = process.env.PORT || 3000 ;
 
@@ -11,7 +12,8 @@ const port = process.env.PORT || 3000 ;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'))
-
+app.use(cors())
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 require("./db")
 
 

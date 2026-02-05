@@ -23,7 +23,8 @@ const userSchema = new mongoose.Schema({
     },
     birthDate: { type: Date, required: true },
     gender: { type: String, enum: ['male', 'female'], required: true },
-    isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true },
+    avatar: { type: String, default: 'uploads/default.png' }
 },
     {
         timestamps: true // createdAt & updatedAt 
