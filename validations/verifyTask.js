@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const AppError = require("../utils/AppError");
 const taskStatus = require("../utils/taskStatus");
+const validate = require('../middleware/validate');
 
 const createTaskSchema = Joi.object({
     title: Joi.string().min(3).max(100).required(),
@@ -21,39 +22,8 @@ const updateTaskSchema = Joi.object({
         taskStatus.COMPLETED
     )
 }).min(1); 
-const createTaskVerify = (req, res, next) => {
-    const { error } = createTaskSchema.validate(req.body, { abortEarly: false });
-
-    if (error) {
-        const errors = Object.fromEntries(
-            error.details.map(e => [
-                e.path[0],
-                e.message.replace(/"/g, "")
-            ])
-        );
-
-        return next(new AppError("Validation error", 400, errors));
-    }
-
-    next();
+module.exports = {
+  createTaskVerify: validate(createTaskSchema),
+  updateTaskVerify: validate(updateTaskSchema),
 };
-
-const updateTaskVerify = (req, res, next) => {
-    const { error } = updateTaskSchema.validate(req.body, { abortEarly: false });
-
-    if (error) {
-        const errors = Object.fromEntries(
-            error.details.map(e => [
-                e.path[0],
-                e.message.replace(/"/g, "")
-            ])
-        );
-
-        return next(new AppError("Validation error", 400, errors));
-    }
-
-    next();
-};
-
-module.exports = { createTaskVerify, updateTaskVerify };
 
