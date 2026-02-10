@@ -5,15 +5,15 @@ const asyncWrapper = require('../middleware/asyncWrapper');
 const mongoose = require('mongoose');
 
 const getAllUsers = asyncWrapper(async (req, res, next) => {
-     const query = req.query;
-     const limit = query.limit || 10;
-     const page = query.page || 1;
-     const skip = (page - 1) * limit;
+    const query = req.query;
+    const limit = query.limit || 10;
+    const page = query.page || 1;
+    const skip = (page - 1) * limit;
     const users = await User.find({}, { "__v": false, 'password': false, "token": false })
-     .limit(limit).skip(skip);
+        .limit(limit).skip(skip);
 
     res.json({ status: "success", message: "Retrieved users successfully!", data: users });
-    
+
 })
 
 const deleteUser = asyncWrapper(async (req, res, next) => {
@@ -27,6 +27,12 @@ const deleteUser = asyncWrapper(async (req, res, next) => {
 const updateUser = asyncWrapper(async (req, res, next) => {
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id)) return next(new AppError("Invalid user ID", 400));
+        if (req.user._id.toString() !== id && req.user.role !== "ADMIN") {
+        return next(new AppError("You are not allowed to update this user", 403));
+    }
+    if (req.file) {
+        req.body.avatar = req.file.path;
+    }
     if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 12);
     }
@@ -42,4 +48,4 @@ const getSingleUser = asyncWrapper(async (req, res, next) => {
     res.status(200).json({ status: "success", message: "Retrieved successfully!", data: user })
 })
 
-module.exports = {  getAllUsers, deleteUser, updateUser, getSingleUser }
+module.exports = { getAllUsers, deleteUser, updateUser, getSingleUser }

@@ -8,6 +8,7 @@ const userRoles = require('../utils/userRoles');
 const { registerVerify, loginVerify, updateVerify } = require('../validations/verifyUser');
 const { register, login } = require('../controllers/authController');
 const multer = require('multer');
+const handleAvatarUpload = require('../middleware/handleAvatarUpload');
 const diskStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads');
@@ -45,7 +46,7 @@ router.route("/")
     .get(verifyToken, getAllUsers)
     .post(loginVerify, login)
 router.delete("/:id", verifyToken, allowedTo(userRoles.ADMIN), deleteUser)
-router.patch("/:id", updateVerify, updateUser)
+router.patch("/:id", verifyToken,upload.single("avatar"),handleAvatarUpload,updateVerify,updateUser);
 router.get("/:id", verifyToken, getSingleUser)
 
 module.exports = router;

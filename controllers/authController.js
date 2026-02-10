@@ -22,7 +22,7 @@ const register = asyncWrapper(async (req, res, next) => {
         role,
         birthDate,
         gender,
-        avatar: req.file.filename
+        avatar: req.file?.path
     });
     const token = await generateJWT({ email: user.email, _id: user._id, role: user.role });
     user.token = token;
